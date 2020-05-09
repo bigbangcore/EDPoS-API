@@ -1,0 +1,7 @@
+.vs/
+EDPoS_API_Core/bin
+EDPoS_API_Core/obj
+Web.config
+App.config
+appsettings.json
+packages/

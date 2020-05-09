@@ -1,0 +1,430 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EDPoS_API_Core</name>
+    </assembly>
+    <members>
+        <member name="M:EDPoS_API_Core.Common.Encrypt.EncryptByMD5(System.String)">
+            <summary>
+             Encrypt the specified string to a hexadecimal string of 32 characters in length using the MD5.
+            </summary>
+            <param name="input">The specified string</param>
+            <returns></returns>
+        </member>
+        <member name="T:EDPoS_API_Core.Controllers.DposController">
+            <summary>
+            About EDPoS
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.DposController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
+            <summary>
+            constructed function
+            </summary>
+            <param name="option"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.DposController.Get">
+            <summary>
+             Get the list of users who participate in the dpos supernode campaign
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.DposController.Get(System.DateTime)">
+            <summary>
+            Get the reward list by datetime
+            </summary>
+            <param name="date">dataTime,formate:2020-01-01</param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.DposController.Put(System.Int32,System.String)">
+            <summary>
+            Change the edpos node name
+            </summary>
+            <param name="id">node id</param>
+            <param name="value">JsonPool,what contains name information</param>
+            <returns></returns>
+        </member>
+        <member name="T:EDPoS_API_Core.Controllers.DposDetailsController">
+            <summary>
+            EDPoS details
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Controllers.RewardController">
+            <summary>
+            About rewards
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.RewardController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
+            <summary>
+            constructed function
+            </summary>
+            <param name="option"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.RewardController.Get(System.String,System.DateTime)">
+            <summary>
+             Get earnings list by dpos address and date
+            </summary>
+            <param name="dpos_addr">dpos address</param>
+            <param name="date">date,formate:2020-01-01</param>
+            <returns>list</returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.RewardController.Put(System.Int32,System.String)">
+            <summary>
+            The client pays the token to the voter, and then submits the voting information
+            </summary>
+            <param name="id">id</param>
+            <param name="value">JsonPayment model</param>
+            <returns>Missing dpos node/OK/key error</returns>
+        </member>
+        <member name="T:EDPoS_API_Core.Controllers.VotersController">
+            <summary>
+            About Voters information
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.DposDailyReward">
+            <summary>
+            Daily reward
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposDailyReward.id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposDailyReward.dpos_addr">
+            <summary>
+            EDPOS address, It is used to reward voters
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposDailyReward.client_addr">
+            <summary>
+            voter address
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposDailyReward.payment_date">
+            <summary>
+            The datetime of reward voters
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposDailyReward.payment_money">
+            <summary>
+            The amount of pay out
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposDailyReward.txid">
+            <summary>
+            The return id of dpos node had payed
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.DposRewardDetails">
+            <summary>
+            Reward details
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposRewardDetails.id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposRewardDetails.dpos_addr">
+            <summary>
+            EDPOS address, It is used to reward voters
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposRewardDetails.client_addr">
+            <summary>
+            Voter address
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposRewardDetails.vote_amount">
+            <summary>
+            Vote tokens
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposRewardDetails.reward_money">
+            <summary>
+            Reward tokens
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposRewardDetails.reward_date">
+            <summary>
+            The datetime of compute
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposRewardDetails.block_height">
+            <summary>
+            Block height
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposRewardDetails.reward_state">
+            <summary>
+            Status of payments
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.IResult">
+            <summary>
+            The Interface of result
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.IResult.Code">
+            <summary>
+            Code
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.IResult.Message">
+            <summary>
+            Message
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.IResult.Success">
+            <summary>
+            Is Success
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.IResult`1">
+            <summary>
+            Generic classes
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.IResult`1.Data">
+            <summary>
+            Data
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.ResultCode">
+            <summary>
+            Code
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.Ok">
+             <summary>
+             OK
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.Fail">
+             <summary>
+             Fail
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.LoginFail">
+             <summary>
+             Login fail
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.NoRecord">
+             <summary>
+             No Record
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.NoSuchUser">
+             <summary>
+             No users
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.Unauthorized">
+             <summary>
+             Not logged
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.Forbidden">
+            <summary>
+            Unauthorized
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.InvalidToken">
+            <summary>
+            Invalid token
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.InvalidData">
+            <summary>
+            Parameter validation failed
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.InvalidUser">
+            <summary>
+            Invalid user
+            </summary>
+        </member>
+        <member name="F:EDPoS_API_Core.Models.ResultCode.Zero">
+            <summary>
+            The denominator can not be zero
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.EumHelper">
+            <summary>
+            show message
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.EumHelper.DisplayName(System.Enum)">
+            <summary>
+            Display message
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.Pool">
+            <summary>
+            About pool
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.Pool.id">
+            <summary>
+            id
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.Pool.address">
+            <summary>
+            pool address
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.Pool.name">
+            <summary>
+            pool name
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.Pool.key">
+            <summary>
+            pool key
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.JsonPool">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.JsonPool.name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.JsonPool.md5">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.Result">
+            <summary>
+            Result
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.Result.Success">
+            <summary>
+            Is success
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.Result.Code">
+            <summary>
+            Result code
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.Result.Message">
+            <summary>
+            show message
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.#ctor">
+            <summary>
+            Return result,default ok
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.#ctor(EDPoS_API_Core.Models.ResultCode,System.String)">
+            <summary>
+            Return the result
+            </summary>
+            <param name="code">state code</param>
+            <param name="message">message</param>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.FromCode(EDPoS_API_Core.Models.ResultCode,System.String)">
+            <summary>
+            Return the specific state code
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.FromError(System.String,EDPoS_API_Core.Models.ResultCode)">
+            <summary>
+            Return error message
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.Ok(System.String)">
+            <summary>
+            Return successful
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.FromCode``1(EDPoS_API_Core.Models.ResultCode,System.String)">
+            <summary>
+            Return the specific state code
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.FromCode``1(EDPoS_API_Core.Models.ResultCode,``0,System.String)">
+            <summary>
+            Return the specific state code, message and data
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.FromError``1(System.String,EDPoS_API_Core.Models.ResultCode)">
+            <summary>
+            Return error message
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.FromData``1(``0)">
+            <summary>
+            Return data
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.FromData``1(``0,System.String)">
+            <summary>
+            Return data and message
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result.Ok``1(``0)">
+            <summary>
+            Return successfull
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.Result`1">
+            <summary>
+            Return result
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result`1.#ctor(`0)">
+            <summary>
+            Return result
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result`1.#ctor(EDPoS_API_Core.Models.ResultCode,System.String)">
+            <summary>
+            Return result and message
+            </summary>
+            <param name="code">state code</param>
+            <param name="message">Note</param>
+        </member>
+        <member name="M:EDPoS_API_Core.Models.Result`1.#ctor(EDPoS_API_Core.Models.ResultCode,System.String,`0)">
+            <summary>
+            Return result
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.Result`1.Data">
+            <summary>
+            Data
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.TransactionInfo.dpos_in">
+            <summary>
+            The dpos address of vote to
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.TransactionInfo.client_in">
+            <summary>
+            The address of voter
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.TransactionInfo.dpos_out">
+            <summary>
+            The dpos address of redeem to
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.TransactionInfo.client_out">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>
