@@ -6,6 +6,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\BigBang\BBC_DataAPI\DataAPI\DposTask\DposAPI_Core\bin\Release\netcoreapp3.0\publish\</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\BigBang\EDPoS_API\EDPoS_API_Core\bin\Release\netcoreapp3.0\publish\</_PublishTargetUrl>
   </PropertyGroup>
 </Project>

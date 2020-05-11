@@ -80,6 +80,14 @@
             About Voters information
             </summary>
         </member>
+        <member name="M:EDPoS_API_Core.Controllers.VotersController.Get(System.String,System.String)">
+            <summary>
+            Get the Voting of voters by dposaddr,if has the voterAddr parameter,return the voter's information
+            </summary>
+            <param name="dposAddr"></param>
+            <param name="voterAddr"></param>
+            <returns></returns>
+        </member>
         <member name="T:EDPoS_API_Core.Models.DposDailyReward">
             <summary>
             Daily reward
