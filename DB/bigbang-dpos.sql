@@ -51,20 +51,6 @@ CREATE TABLE `DposDailyReward`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Table structure for DposPayment
--- ----------------------------
-DROP TABLE IF EXISTS `DposPayment`;
-CREATE TABLE `DposPayment`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dpos_addr` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'dpos 地址',
-  `client_addr` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '投票者收款地址',
-  `payment_date` date NULL DEFAULT NULL COMMENT '投票者收益的日期',
-  `payment_money` decimal(30, 10) NULL DEFAULT NULL COMMENT '投票者在这个日期内的收益',
-  `txid` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '支付交易ID',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
--- ----------------------------
 -- Table structure for DposRewardDetails
 -- ----------------------------
 DROP TABLE IF EXISTS `DposRewardDetails`;
@@ -77,19 +63,6 @@ CREATE TABLE `DposRewardDetails`  (
   `reward_date` date NULL DEFAULT NULL COMMENT '收益日期',
   `block_height` int(11) NULL DEFAULT NULL COMMENT '区块高度',
   `reward_state` bit(1) NULL DEFAULT b'0' COMMENT '汇总状态，1表示已计算汇总，0表未计算汇总',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
--- ----------------------------
--- Table structure for DposState
--- ----------------------------
-DROP TABLE IF EXISTS `DposState`;
-CREATE TABLE `DposState`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dpos_addr` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'dpos 地址',
-  `client_addr` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '投票者地址',
-  `audit_date` date NULL DEFAULT NULL COMMENT '清算日期',
-  `audit_money` decimal(30, 10) NULL DEFAULT NULL COMMENT '清算金额',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
