@@ -3,34 +3,39 @@
 namespace EDPoS_API_Core.Models
 {
     /// <summary>
-    /// Daily reward
+    /// Dpos address daily reward
     /// </summary>
-    public class DposDailyReward
+    public class DposAddrDaily
     {
-        /// <summary>
-        /// ID
-        /// </summary>
-        public int id { get; set; }
-
         /// <summary>
         /// EDPOS address, It is used to reward voters
         /// </summary>
         public string dpos_addr { get; set; }
 
         /// <summary>
-        /// voter address
+        /// The amount of pay out
         /// </summary>
-        public string client_addr { get; set; }
+        public decimal payment_money { get; set; }
 
         /// <summary>
         /// The datetime of reward voters
         /// </summary>
         public DateTime payment_date { get; set; }
+    }
+    /// <summary>
+    /// Daily reward
+    /// </summary>
+    public class DposDailyReward : DposAddrDaily
+    {
+        /// <summary>
+        /// ID
+        /// </summary>
+        public int id { get; set; }        
 
         /// <summary>
-        /// The amount of pay out
+        /// voter address
         /// </summary>
-        public decimal payment_money { get; set; }
+        public string client_addr { get; set; }
 
         /// <summary>
         /// The return id of dpos node had payed

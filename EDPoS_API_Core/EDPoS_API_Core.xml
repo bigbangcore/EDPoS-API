@@ -88,6 +88,26 @@
             <param name="voterAddr"></param>
             <returns></returns>
         </member>
+        <member name="T:EDPoS_API_Core.Models.DposAddrDaily">
+            <summary>
+            Dpos address daily reward
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposAddrDaily.dpos_addr">
+            <summary>
+            EDPOS address, It is used to reward voters
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposAddrDaily.payment_money">
+            <summary>
+            The amount of pay out
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.DposAddrDaily.payment_date">
+            <summary>
+            The datetime of reward voters
+            </summary>
+        </member>
         <member name="T:EDPoS_API_Core.Models.DposDailyReward">
             <summary>
             Daily reward
@@ -98,24 +118,9 @@
             ID
             </summary>
         </member>
-        <member name="P:EDPoS_API_Core.Models.DposDailyReward.dpos_addr">
-            <summary>
-            EDPOS address, It is used to reward voters
-            </summary>
-        </member>
         <member name="P:EDPoS_API_Core.Models.DposDailyReward.client_addr">
             <summary>
             voter address
-            </summary>
-        </member>
-        <member name="P:EDPoS_API_Core.Models.DposDailyReward.payment_date">
-            <summary>
-            The datetime of reward voters
-            </summary>
-        </member>
-        <member name="P:EDPoS_API_Core.Models.DposDailyReward.payment_money">
-            <summary>
-            The amount of pay out
             </summary>
         </member>
         <member name="P:EDPoS_API_Core.Models.DposDailyReward.txid">

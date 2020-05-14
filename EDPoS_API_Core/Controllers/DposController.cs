@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using EDPoS_API_Core.Common;
@@ -63,11 +64,17 @@ namespace EDPoS_API_Core.Controllers
         {
             using (var conn = new MySqlConnection(connStr))
             {
-                Result<List<DposDailyReward>> res = new Result<List<DposDailyReward>>();
-                var query = conn.QueryAsync<DposDailyReward>("SELECT dpos_addr, SUM(payment_money) as payment_money from DposDailyReward where payment_date = @payment_date GROUP BY dpos_addr;", new { payment_date = date.Date });
+                Result<List<DposAddrDaily>> res = new Result<List<DposAddrDaily>>();
+                StringBuilder sb = new StringBuilder();
+                sb.Append("SELECT dpos_addr, SUM(payment_money) as payment_money,'"+ date.ToString("yyyy-MM-dd") + "' as payment_date ");
+                sb.Append(" from DposDailyReward where payment_date = '");
+                sb.Append(date.ToString("yyyy-MM-dd"));
+                sb.Append("' GROUP BY dpos_addr");
+
+                var query = conn.QueryAsync<DposAddrDaily>(sb.ToString());
                 var list = (await query).ToList();
 
-                res = new Result<List<DposDailyReward>>(ResultCode.Ok, null, list);
+                res = new Result<List<DposAddrDaily>>(ResultCode.Ok, null, list);
                 return JsonConvert.SerializeObject(res);
             }
         }
