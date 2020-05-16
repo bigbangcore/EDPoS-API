@@ -11,6 +11,20 @@
             <param name="input">The specified string</param>
             <returns></returns>
         </member>
+        <member name="M:EDPoS_API_Core.Controllers.DailyRewardTotalController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
+            <summary>
+            constructed function
+            </summary>
+            <param name="option"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.DailyRewardTotalController.Get(System.String,System.String)">
+            <summary>
+            Get total rewards by EDPoS address or date
+            </summary>
+            <param name="dpos_addr"></param>
+            <param name="date">eg. 2020-05-12</param>
+            <returns></returns>
+        </member>
         <member name="T:EDPoS_API_Core.Controllers.DposController">
             <summary>
             About EDPoS

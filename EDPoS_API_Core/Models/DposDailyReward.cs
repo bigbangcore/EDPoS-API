@@ -2,10 +2,7 @@
 
 namespace EDPoS_API_Core.Models
 {
-    /// <summary>
-    /// Dpos address daily reward
-    /// </summary>
-    public class DposAddrDaily
+    public class DposAddrDailyAll
     {
         /// <summary>
         /// EDPOS address, It is used to reward voters
@@ -17,6 +14,12 @@ namespace EDPoS_API_Core.Models
         /// </summary>
         public decimal payment_money { get; set; }
 
+    }
+    /// <summary>
+    /// Dpos address daily reward
+    /// </summary>
+    public class DposAddrDaily : DposAddrDailyAll
+    {
         /// <summary>
         /// The datetime of reward voters
         /// </summary>
