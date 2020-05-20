@@ -39,7 +39,7 @@ namespace EDPoS_API_Core.Controllers
             Result<List<MVoters>> res = new Result<List<MVoters>>();
             using (var conn =new MySqlConnection(connStr))
             {
-                string strSql = GetSql(dposAddr, voterAddr);
+                string strSql = GetSqlNew(dposAddr, voterAddr);
 
                 try
                 {
@@ -63,6 +63,56 @@ namespace EDPoS_API_Core.Controllers
                 }
             }
         }
+
+        private string GetSqlNew(string dposAddr, string voterAddr)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(@"SELECT  
+                        sql_calc_found_rows max(height) AS height,
+                        max(votedate) AS votedate,
+                        voter AS 'from',
+                        sum(amount) AS amount, 
+                        max(type) AS type FROM (");
+            sb.Append(@"SELECT 
+                        b.height,
+                        from_unixtime(b.time, '%Y-%m-%d %H:%i:%s') AS votedate,
+                        t.form,
+                        t.`to`, 
+                        t.amount, 
+                        t.type,(");
+            sb.Append(@"CASE 
+                        WHEN t.client_in is null AND t.type='stake' 
+                        THEN t.`to`
+                        WHEN t.client_in is null AND t.n=0 
+                        THEN t.form
+                        WHEN t.client_in is null AND t.`to`= '" + dposAddr + @"' AND t.n=1 
+                        THEN t.`to`
+                        WHEN t.client_in is null AND t.n=1 AND t.type='token' 
+                        THEN
+                        (SELECT client_in FROM Tx WHERE `to`= t.`to` AND n = 0 LIMIT 1) 
+                        ELSE 
+                        t.client_in 
+                        END) AS voter, t.n 
+                        FROM Tx t 
+                        JOIN Block b ON b.`hash`= t.block_hash
+                        WHERE 
+                        (t.`to` IN (SELECT DISTINCT `to` FROM Tx WHERE LEFT(`to`, 4) = '20w0' AND dpos_in = '");
+            sb.Append(dposAddr);
+            sb.Append("') OR t.`to`= '");
+            sb.Append(dposAddr);
+            sb.Append("')");
+            sb.Append(@"and t.type <> 'certification' and t.spend_txid is null) c where 1=1 ");
+
+            if (!string.IsNullOrEmpty(voterAddr))
+            {
+                sb.Append(" AND voter = '" + voterAddr + "' ");
+            }
+
+            sb.Append("group by voter");
+
+            return sb.ToString();
+        }
+
 
         private string GetSql(string dposAddr,string voterAddr)
         {

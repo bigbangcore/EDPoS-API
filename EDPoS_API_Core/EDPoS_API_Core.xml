@@ -4,6 +4,20 @@
         <name>EDPoS_API_Core</name>
     </assembly>
     <members>
+        <member name="M:EDPoS_API_Core.Bll.BCommon.GetPayment_money(System.String)">
+            <summary>
+            得到某一天的奖励金额
+            </summary>
+            <param name="date"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BCommon.GetDposRewardDetails(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            得到某一天某个地址的投票和奖励详情
+            </summary>
+            <param name="date"></param>
+            <returns></returns>
+        </member>
         <member name="M:EDPoS_API_Core.Common.Encrypt.EncryptByMD5(System.String)">
             <summary>
              Encrypt the specified string to a hexadecimal string of 32 characters in length using the MD5.
@@ -17,12 +31,13 @@
             </summary>
             <param name="option"></param>
         </member>
-        <member name="M:EDPoS_API_Core.Controllers.DailyRewardTotalController.Get(System.String,System.String)">
+        <member name="M:EDPoS_API_Core.Controllers.DailyRewardTotalController.Get(System.String,System.String,System.Boolean)">
             <summary>
             Get total rewards by EDPoS address or date
             </summary>
             <param name="dpos_addr"></param>
             <param name="date">eg. 2020-05-12</param>
+            <param name="isAll"></param>
             <returns></returns>
         </member>
         <member name="T:EDPoS_API_Core.Controllers.DposController">
@@ -47,6 +62,14 @@
             Get the reward list by datetime
             </summary>
             <param name="date">dataTime,formate:2020-01-01</param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.DposController.Get(System.String,System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="dposAddr"></param>
+            <param name="date"></param>
             <returns></returns>
         </member>
         <member name="M:EDPoS_API_Core.Controllers.DposController.Put(System.Int32,System.String)">
@@ -102,19 +125,19 @@
             <param name="voterAddr"></param>
             <returns></returns>
         </member>
-        <member name="T:EDPoS_API_Core.Models.DposAddrDaily">
-            <summary>
-            Dpos address daily reward
-            </summary>
-        </member>
-        <member name="P:EDPoS_API_Core.Models.DposAddrDaily.dpos_addr">
+        <member name="P:EDPoS_API_Core.Models.DposAddrDailyAll.dpos_addr">
             <summary>
             EDPOS address, It is used to reward voters
             </summary>
         </member>
-        <member name="P:EDPoS_API_Core.Models.DposAddrDaily.payment_money">
+        <member name="P:EDPoS_API_Core.Models.DposAddrDailyAll.payment_money">
             <summary>
             The amount of pay out
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.DposAddrDaily">
+            <summary>
+            Dpos address daily reward
             </summary>
         </member>
         <member name="P:EDPoS_API_Core.Models.DposAddrDaily.payment_date">

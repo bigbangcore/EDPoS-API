@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace EDPoS_API_Core.Models
 {
@@ -13,7 +14,6 @@ namespace EDPoS_API_Core.Models
         /// The amount of pay out
         /// </summary>
         public decimal payment_money { get; set; }
-
     }
     /// <summary>
     /// Dpos address daily reward
@@ -44,5 +44,19 @@ namespace EDPoS_API_Core.Models
         /// The return id of dpos node had payed
         /// </summary>
         public string txid { get; set; }
+    }
+
+    public class ProfitDaily : DposAddrDailyAll
+    {
+        public decimal profit { get; set; }
+        public decimal avg_profit { get; set; }
+        public decimal audit_money { get; set; }
+    }
+
+    public class ForComput
+    {
+        public decimal paymentMoney { get; set; }
+        public decimal voteAmount { get; set; }
+        public ArrayList arrHeight { get; set; }
     }
 }

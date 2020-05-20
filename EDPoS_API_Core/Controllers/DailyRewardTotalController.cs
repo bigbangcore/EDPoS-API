@@ -35,6 +35,7 @@ namespace EDPoS_API_Core.Controllers
         /// </summary>
         /// <param name="dpos_addr"></param>
         /// <param name="date">eg. 2020-05-12</param>
+        /// <param name="isAll"></param>
         /// <returns></returns>
         [HttpGet]
         public async Task<string> Get(string dpos_addr, string date, bool isAll = false)
