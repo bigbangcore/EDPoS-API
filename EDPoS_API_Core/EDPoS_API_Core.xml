@@ -4,18 +4,74 @@
         <name>EDPoS_API_Core</name>
     </assembly>
     <members>
-        <member name="M:EDPoS_API_Core.Bll.BCommon.GetPayment_money(System.String)">
+        <member name="M:EDPoS_API_Core.Bll.BCommon.GetBlockDetail(System.String,System.String)">
             <summary>
-            得到某一天的奖励金额
+            Get EDPoS Blocks Detail what is useful
+            </summary>
+            <param name="reward_address"></param>
+            <param name="date"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BDpos.GetPoolList">
+            <summary>
+            Get Pool List
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BDpos.GetDposRewardDetails(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Voting and reward details at an address on a given day
+            </summary>
+            <param name="dateTime"></param>
+            <param name="height"></param>
+            <param name="dpos_addr"></param>
+            <param name="client_addr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BDpos.GetMaxHeight(System.String,System.String)">
+            <summary>
+            Get the max height of the table DposRewardDetails
+            </summary>
+            <param name="date"></param>
+            <param name="dposAddr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BDpos.GetVotingTokens(System.Int64)">
+            <summary>
+            Get the situation of voting
+            </summary>
+            <param name="height"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BDpos.GetPayment_money(System.String)">
+            <summary>
+            Get the total rewards of the day
             </summary>
             <param name="date"></param>
             <returns></returns>
         </member>
-        <member name="M:EDPoS_API_Core.Bll.BCommon.GetDposRewardDetails(System.String,System.Int32,System.String,System.String)">
+        <member name="M:EDPoS_API_Core.Bll.BReward.GetTotalReward(System.String,System.String)">
             <summary>
-            得到某一天某个地址的投票和奖励详情
+            
             </summary>
+            <param name="dpos_addr"></param>
             <param name="date"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BReward.GetDposDailyReward(System.String,System.DateTime)">
+            <summary>
+            Get Dpos Daily Reward
+            </summary>
+            <param name="dpos_addr"></param>
+            <param name="date"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BVoter.GetVoting(System.String,System.String)">
+            <summary>
+            Get the Voting of voters by dposaddr,if has the voterAddr parameter,return the voter's information
+            </summary>
+            <param name="dposAddr">super node address</param>
+            <param name="voterAddr">voter address</param>
             <returns></returns>
         </member>
         <member name="M:EDPoS_API_Core.Common.Encrypt.EncryptByMD5(System.String)">
@@ -23,6 +79,13 @@
              Encrypt the specified string to a hexadecimal string of 32 characters in length using the MD5.
             </summary>
             <param name="input">The specified string</param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Common.SqlAttack.IsDangerous(System.String@)">
+            <summary>
+            If dangerous,return true,else return false
+            </summary>
+            <param name="strParam"></param>
             <returns></returns>
         </member>
         <member name="M:EDPoS_API_Core.Controllers.DailyRewardTotalController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
@@ -66,24 +129,26 @@
         </member>
         <member name="M:EDPoS_API_Core.Controllers.DposController.Get(System.String,System.DateTime)">
             <summary>
-            
+            Get avg_profit and profit by super node address and date
             </summary>
             <param name="dposAddr"></param>
             <param name="date"></param>
-            <returns></returns>
-        </member>
-        <member name="M:EDPoS_API_Core.Controllers.DposController.Put(System.Int32,System.String)">
-            <summary>
-            Change the edpos node name
-            </summary>
-            <param name="id">node id</param>
-            <param name="value">JsonPool,what contains name information</param>
             <returns></returns>
         </member>
         <member name="T:EDPoS_API_Core.Controllers.DposDetailsController">
             <summary>
             EDPoS details
             </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.DposDetailsController.Get(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Get Reward details by date, height, node address or voter address
+            </summary>
+            <param name="dateTime"></param>
+            <param name="height"></param>
+            <param name="dpos_addr"></param>
+            <param name="client_addr"></param>
+            <returns></returns>
         </member>
         <member name="T:EDPoS_API_Core.Controllers.RewardController">
             <summary>
@@ -100,17 +165,9 @@
             <summary>
              Get earnings list by dpos address and date
             </summary>
-            <param name="dpos_addr">dpos address</param>
-            <param name="date">date,formate:2020-01-01</param>
+            <param name="dpos_addr">super node address</param>
+            <param name="date">formate:2020-01-01</param>
             <returns>list</returns>
-        </member>
-        <member name="M:EDPoS_API_Core.Controllers.RewardController.Put(System.Int32,System.String)">
-            <summary>
-            The client pays the token to the voter, and then submits the voting information
-            </summary>
-            <param name="id">id</param>
-            <param name="value">JsonPayment model</param>
-            <returns>Missing dpos node/OK/key error</returns>
         </member>
         <member name="T:EDPoS_API_Core.Controllers.VotersController">
             <summary>

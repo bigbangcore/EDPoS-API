@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using EDPoS_API_Core.Bll;
 using EDPoS_API_Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,37 +41,11 @@ namespace EDPoS_API_Core.Controllers
         [HttpGet]
         public async Task<string> Get(string dpos_addr, string date, bool isAll = false)
         {
-            using (var conn = new MySqlConnection(connStr))
-            {
-                Result<List<DposAddrDaily>> res = new Result<List<DposAddrDaily>>();
-                StringBuilder sb = new StringBuilder("SELECT dpos_addr,sum(payment_money) as payment_money,payment_date FROM `DposDailyReward` where 1=1 ");
-                
-                if (!string.IsNullOrEmpty(dpos_addr))
-                {
-                    sb.Append(" AND dpos_addr = '"+ dpos_addr.Trim() + "' ");
-                }
-
-                if (!string.IsNullOrEmpty(date))
-                {
-                    DateTime dateTmp = new DateTime();
-                    if (DateTime.TryParse(date,out dateTmp))
-                    {
-                        sb.Append(" AND payment_date = '"+ dateTmp.ToString("yyyy-MM-dd") + "' ");
-                    }                    
-                }
-
-                if(!string.IsNullOrEmpty(date))
-                {
-                    sb.Append("GROUP BY dpos_addr");
-                }
-                else
-                {
-                    sb.Append("GROUP BY payment_date");
-                }
-
-                var query = await conn.QueryAsync<DposAddrDaily>(sb.ToString());
-
-                var lst = query.ToList();
+            Result<List<DposAddrDaily>> res = new Result<List<DposAddrDaily>>();
+            try
+            {                
+                BReward bll = new BReward(connStr);
+                var lst = (await bll.GetTotalReward(dpos_addr, date)).ToList();
                 if (lst.Count > 0)
                 {
                     if (isAll && string.IsNullOrEmpty(date))
@@ -80,19 +55,32 @@ namespace EDPoS_API_Core.Controllers
                         {
                             dpos.payment_money += v.payment_money;
                         }
-                        dpos.dpos_addr = dpos_addr.Trim();
+                        if (!string.IsNullOrEmpty(dpos_addr))
+                        {
+                            dpos.dpos_addr = dpos_addr.Trim();
+                        }
+                        else
+                        {
+                            dpos.dpos_addr = "All EDPoS Address";
+                        }
+                        
                         var ress = new Result<DposAddrDailyAll>(ResultCode.Ok, null, dpos);
                         return JsonConvert.SerializeObject(ress);
                     }
                     else
                     {
                         res = new Result<List<DposAddrDaily>>(ResultCode.Ok, null, lst);
-                    }  
+                    }
                 }
                 else
                 {
                     res = new Result<List<DposAddrDaily>>(ResultCode.NoRecord, null, null);
                 }
+                return JsonConvert.SerializeObject(res);
+            }
+            catch (Exception ex)
+            {
+                res = new Result<List<DposAddrDaily>>(ResultCode.Fail, ex.Message, null);
                 return JsonConvert.SerializeObject(res);
             }
         }

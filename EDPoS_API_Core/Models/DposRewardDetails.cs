@@ -7,6 +7,7 @@ namespace EDPoS_API_Core.Models
     /// </summary>
     public class DposRewardDetails
     {
+        // dpos_addr,client_addr,vote_amount,reward_money,reward_date,block_height
         /// <summary>
         /// Id
         /// </summary>

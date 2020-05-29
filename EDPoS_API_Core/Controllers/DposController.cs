@@ -2,14 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Dapper;
-using EDPoS_API_Core.Common;
+using EDPoS_API_Core.Bll;
 using EDPoS_API_Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 
 namespace EDPoS_API_Core.Controllers
@@ -42,15 +39,16 @@ namespace EDPoS_API_Core.Controllers
         public async Task<string> Get()
         {
             Result<List<Pool>> res = new Result<List<Pool>>();
-            using (var conn = new MySqlConnection(connStr))
+            BDpos bll = new BDpos(connStr);
+            try
             {
-                var query = await conn.QueryAsync<Pool>("SELECT * FROM `Pool` where type = 'dpos'", null);
-                var list = query.ToList();
-                foreach (var obj in list)
-                {
-                    obj.key = "******";
-                }
-                res = new Result<List<Pool>>(list);
+                var lst = await bll.GetPoolList();
+                res = new Result<List<Pool>>(lst);
+                return JsonConvert.SerializeObject(res);
+            }
+            catch (Exception ex)
+            {
+                res = new Result<List<Pool>>(ResultCode.Fail, ex.Message, null);
                 return JsonConvert.SerializeObject(res);
             }
         }
@@ -64,17 +62,25 @@ namespace EDPoS_API_Core.Controllers
         public async Task<string> Get(DateTime date)
         {
             Result<List<DposAddrDaily>> res = new Result<List<DposAddrDaily>>();
-            Bll.BCommon bll = new Bll.BCommon(connStr);
-            string strDate = date.ToString("yyyy-MM-dd");
-            var query = bll.GetPayment_money(strDate);
-            var list = (await query).ToList();
+            BDpos bll = new BDpos(connStr);            
+            try
+            {
+                string strDate = date.ToString("yyyy-MM-dd");
+                var query = bll.GetPayment_money(strDate);
+                var list = (await query).ToList();
 
-            res = new Result<List<DposAddrDaily>>(ResultCode.Ok, null, list);
-            return JsonConvert.SerializeObject(res);
+                res = new Result<List<DposAddrDaily>>(ResultCode.Ok, null, list);
+                return JsonConvert.SerializeObject(res);
+            }
+            catch (Exception ex)
+            {
+                res = new Result<List<DposAddrDaily>>(ResultCode.Fail, ex.Message, null);
+                return JsonConvert.SerializeObject(res);
+            }            
         }
 
         /// <summary>
-        /// 
+        /// Get avg_profit and profit by super node address and date
         /// </summary>
         /// <param name="dposAddr"></param>
         /// <param name="date"></param>
@@ -82,25 +88,25 @@ namespace EDPoS_API_Core.Controllers
         [HttpGet("/api/[controller]/")]
         public async Task<string> Get(string dposAddr, DateTime date)
         {
-            try
+            Result<List<ProfitDaily>> res = new Result<List<ProfitDaily>>();
+            if (string.IsNullOrEmpty(dposAddr))
             {
-                Result<List<ProfitDaily>> res = new Result<List<ProfitDaily>>();
-                if (string.IsNullOrEmpty(dposAddr))
-                {
-                    res = new Result<List<ProfitDaily>>(ResultCode.Forbidden, "dposAddr is null.", null);
-                    return JsonConvert.SerializeObject(res);
-                }
+                res = new Result<List<ProfitDaily>>(ResultCode.Forbidden, "dposAddr is null.", null);
+                return JsonConvert.SerializeObject(res);
+            }
 
-                if (date == DateTime.MinValue)
-                {
-                    res = new Result<List<ProfitDaily>>(ResultCode.Forbidden, "date is null.", null);
-                    return JsonConvert.SerializeObject(res);
-                }
-                Bll.BCommon bll = new Bll.BCommon(connStr);
+            if (date == DateTime.MinValue)
+            {
+                res = new Result<List<ProfitDaily>>(ResultCode.Forbidden, "date is null.", null);
+                return JsonConvert.SerializeObject(res);
+            }
+
+            BDpos bll = new BDpos(connStr);
+
+            try
+            {               
                 string strDate = date.ToString("yyyy-MM-dd");
-
-                var queryRewardLst = bll.GetDposRewardDetails(strDate, 0);              
-                
+                var queryRewardLst = bll.GetDposRewardDetails(strDate, 0);  
                 var rewardLst = await queryRewardLst;
                 Dictionary<string, List<DposRewardDetails>> dic=new Dictionary<string, List<DposRewardDetails>>();
 
@@ -179,89 +185,9 @@ namespace EDPoS_API_Core.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                res = new Result<List<ProfitDaily>>(ResultCode.Fail, ex.Message, null);
+                return JsonConvert.SerializeObject(res);
             }
-        }
-
-        /// <summary>
-        /// Change the edpos node name
-        /// </summary>
-        /// <param name="id">node id</param>
-        /// <param name="value">JsonPool,what contains name information</param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        public string Put(int id, [FromBody]string value)
-        {
-            JsonPool jp = JsonConvert.DeserializeObject<JsonPool>(value);
-            using (var conn = new MySqlConnection(connStr))
-            {
-                var list = conn.Query<Pool>("SELECT * FROM Pool where id = @id;", new { id = id }).ToList();
-                if (list.Count == 0)
-                {
-                    return "Missing dpos node";
-                }
-                else
-                {
-                    if (Encrypt.EncryptByMD5(id + list[0].key) == jp.md5)
-                    {
-                        conn.Execute("update Pool set name = @name where id = @id ", new { name = jp.name, id = id });
-                        return "OK";
-                    }
-                    else
-                    {
-                        return "key error";
-                    }
-                }
-            }
-        }
-
-        private string GetSqlNew(string dposAddr, string voterAddr = "")
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(@"SELECT  
-                        sql_calc_found_rows max(height) AS height,
-                        max(votedate) AS votedate,
-                        voter AS 'from',
-                        sum(amount) AS amount, 
-                        max(type) AS type FROM (");
-            sb.Append(@"SELECT 
-                        b.height,
-                        from_unixtime(b.time, '%Y-%m-%d %H:%i:%s') AS votedate,
-                        t.form,
-                        t.`to`, 
-                        t.amount, 
-                        t.type,(");
-            sb.Append(@"CASE 
-                        WHEN t.client_in is null AND t.type='stake' 
-                        THEN t.`to`
-                        WHEN t.client_in is null AND t.n=0 
-                        THEN t.form
-                        WHEN t.client_in is null AND t.`to`= '" + dposAddr + @"' AND t.n=1 
-                        THEN t.`to`
-                        WHEN t.client_in is null AND t.n=1 AND t.type='token' 
-                        THEN
-                        (SELECT client_in FROM Tx WHERE `to`= t.`to` AND n = 0 LIMIT 1) 
-                        ELSE 
-                        t.client_in 
-                        END) AS voter, t.n 
-                        FROM Tx t 
-                        JOIN Block b ON b.`hash`= t.block_hash
-                        WHERE 
-                        (t.`to` IN (SELECT DISTINCT `to` FROM Tx WHERE LEFT(`to`, 4) = '20w0' AND dpos_in = '");
-            sb.Append(dposAddr);
-            sb.Append("') OR t.`to`= '");
-            sb.Append(dposAddr);
-            sb.Append("')");
-            sb.Append(@"and t.type <> 'certification' and t.spend_txid is null) c where 1=1 ");
-
-            if (!string.IsNullOrEmpty(voterAddr))
-            {
-                sb.Append(" AND voter = '" + voterAddr + "' ");
-            }
-
-            sb.Append("group by voter");
-
-            return sb.ToString();
         }
     }
 }
