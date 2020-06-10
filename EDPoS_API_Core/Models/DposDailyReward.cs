@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace EDPoS_API_Core.Models
 {
@@ -44,6 +45,13 @@ namespace EDPoS_API_Core.Models
         /// The return id of dpos node had payed
         /// </summary>
         public string txid { get; set; }
+    }
+
+    public class DposDailyRewardLst
+    {
+        public string hash { get; set; }
+        public string hashObj { get; set; }
+        public List<DposDailyReward> lst { get; set; }
     }
 
     public class ProfitDaily : DposAddrDailyAll

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace EDPoS_API_Core.Common
+namespace Test
 {
-    public class Encrypt
+    class Encrypt
     {
         /// <summary>
         ///  Encrypt the specified string to a hexadecimal string of 32 characters in length using the MD5.
@@ -49,6 +47,6 @@ namespace EDPoS_API_Core.Common
                 }
                 return sb.ToString();
             }
-        }        
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace EDPoS_API_Core.Common
         /// <returns></returns>
         public static bool IsDangerous(ref string strParam)
         {
-            var strSql = "exec|insert|select|delete|update|count|chr|mid|master|truncate|char|declare|and|exec|insert|select|delete|update|count|chr|mid|master|truncate|char|declare";
+            var strSql = " exec | insert | select | chr | mid | master | truncate | char | declare | and | exec | delete | update | count ";
             bool ReturnValue = false;
             strParam = ReplaceSQLChar(strParam);
             try
@@ -66,7 +66,6 @@ namespace EDPoS_API_Core.Common
                 str = str.Replace("!", "");
                 str = str.Replace("~", "");
                 str = str.Replace("^", "");
-                str = str.Replace("_", "");
                 return str;
             }
             else

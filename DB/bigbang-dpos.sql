@@ -104,6 +104,27 @@ CREATE TABLE `Task`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
+DROP TABLE IF EXISTS `PowPoolDailyReward`;
+CREATE TABLE `PowPoolDailyReward`  (
+  `id` bigint(0) NOT NULL AUTO_INCREMENT,
+  `addrFrom` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `addrTo` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `reward` decimal(60, 0) ZEROFILL NULL,
+  `settlementDate` datetime(0) NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  PRIMARY KEY (`id`)
+);
+
+DROP TABLE IF EXISTS `AppInfo`;
+CREATE TABLE `AppInfo`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `appID` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `appName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `addTime` datetime(0) NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  `secretKey` varchar(400) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `note` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+);
+
 -- ----------------------------
 -- Table structure for Tx
 -- ----------------------------

@@ -4,6 +4,13 @@
         <name>EDPoS_API_Core</name>
     </assembly>
     <members>
+        <member name="M:EDPoS_API_Core.Bll.BAppInfo.InsertOne(EDPoS_API_Core.Models.MAppInfo)">
+            <summary>
+            Add One App
+            </summary>
+            <param name="mo"></param>
+            <returns></returns>
+        </member>
         <member name="M:EDPoS_API_Core.Bll.BCommon.GetBlockDetail(System.String,System.String)">
             <summary>
             Get EDPoS Blocks Detail what is useful
@@ -50,6 +57,36 @@
             <param name="date"></param>
             <returns></returns>
         </member>
+        <member name="M:EDPoS_API_Core.Bll.BPowPoolDailyReward.GetOne(System.Int64)">
+            <summary>
+            Get One
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BPowPoolDailyReward.GetBySomething(System.String,System.String,System.String)">
+            <summary>
+            Get info by addrFrom, addrTo or settlement date
+            </summary>
+            <param name="addrFrom"></param>
+            <param name="addrTo"></param>
+            <param name="date"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BPowPoolDailyReward.InsertOne(EDPoS_API_Core.Models.MPowPoolDailyReward)">
+            <summary>
+            insert one
+            </summary>
+            <param name="mo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BPowPoolDailyReward.InsertLst(System.Collections.Generic.List{EDPoS_API_Core.Models.MPowPoolDailyReward})">
+            <summary>
+            Multi insert
+            </summary>
+            <param name="lst"></param>
+            <returns></returns>
+        </member>
         <member name="M:EDPoS_API_Core.Bll.BReward.GetTotalReward(System.String,System.String)">
             <summary>
             
@@ -74,6 +111,22 @@
             <param name="voterAddr">voter address</param>
             <returns></returns>
         </member>
+        <member name="T:EDPoS_API_Core.Common.DataValid">
+            <summary>
+            Valid class
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Common.DataValid.Valid(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Valid.Ignore case
+            </summary>
+            <param name="requestSign">Result of Client Signature,appID + ":" + timeSpan + ":" + signPlain</param>
+            <param name="appID">appid</param>
+            <param name="signPlain">The data that awaiting signature</param>
+            <param name="timeSpan">TimeSpan</param>
+            <param name="secretKey">Key</param>
+            <returns></returns>
+        </member>
         <member name="M:EDPoS_API_Core.Common.Encrypt.EncryptByMD5(System.String)">
             <summary>
              Encrypt the specified string to a hexadecimal string of 32 characters in length using the MD5.
@@ -81,11 +134,38 @@
             <param name="input">The specified string</param>
             <returns></returns>
         </member>
+        <member name="M:EDPoS_API_Core.Common.Encrypt.HmacSHA256(System.String,System.String)">
+            <summary>
+            HmacSHA256
+            </summary>
+            <param name="secretKey"></param>
+            <param name="plain"></param>
+            <returns></returns>
+        </member>
         <member name="M:EDPoS_API_Core.Common.SqlAttack.IsDangerous(System.String@)">
             <summary>
             If dangerous,return true,else return false
             </summary>
             <param name="strParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.AppIdController.Get">
+            <summary>
+            Get a appID
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.AppInfoController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
+            <summary>
+            constructed function
+            </summary>
+            <param name="option"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.AppInfoController.Post(EDPoS_API_Core.Models.MAppInfoPwd)">
+            <summary>
+            Add a app info
+            </summary>
+            <param name="mo">MAppInfoPwd</param>
             <returns></returns>
         </member>
         <member name="M:EDPoS_API_Core.Controllers.DailyRewardTotalController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
@@ -150,6 +230,36 @@
             <param name="client_addr"></param>
             <returns></returns>
         </member>
+        <member name="M:EDPoS_API_Core.Controllers.PowPoolDailyRewardController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
+            <summary>
+            constructed function
+            </summary>
+            <param name="option"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.PowPoolDailyRewardController.Get(System.Int64)">
+            <summary>
+            Get one by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.PowPoolDailyRewardController.Get(System.String,System.String,System.String,System.String)">
+            <summary>
+            Get info by addrFrom, addrTo or settlement date
+            </summary>
+            <param name="appID">appID</param>
+            <param name="addrFrom">wallet address : from</param>
+            <param name="addrTo">wallet address : to</param>
+            <param name="date">2020-06-04</param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.PowPoolDailyRewardController.Post(EDPoS_API_Core.Models.MPowPoolDailyRewardWithValid)">
+            <summary>
+            Insert Reward Info into PowPoolDailyReward
+            </summary>
+            <param name="value"></param>
+            <returns>Return the count of inserted info</returns>
+        </member>
         <member name="T:EDPoS_API_Core.Controllers.RewardController">
             <summary>
             About rewards
@@ -161,13 +271,31 @@
             </summary>
             <param name="option"></param>
         </member>
-        <member name="M:EDPoS_API_Core.Controllers.RewardController.Get(System.String,System.DateTime)">
+        <member name="M:EDPoS_API_Core.Controllers.RewardController.Get(System.String,System.String,System.DateTime)">
             <summary>
              Get earnings list by dpos address and date
             </summary>
+            <param name="appID">appID</param>
             <param name="dpos_addr">super node address</param>
             <param name="date">formate:2020-01-01</param>
             <returns>list</returns>
+        </member>
+        <member name="T:EDPoS_API_Core.Controllers.ValidController">
+            <summary>
+            Valid data for request api
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.ValidController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
+            <summary>
+            constructed function
+            </summary>
+            <param name="option"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.ValidController.Post(EDPoS_API_Core.Models.MValid)">
+            <summary>
+            
+            </summary>
+            <param name="mop"></param>
         </member>
         <member name="T:EDPoS_API_Core.Controllers.VotersController">
             <summary>
@@ -368,6 +496,66 @@
             </summary>
             <param name="val"></param>
             <returns></returns>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MAppInfo.appID">
+            <summary>
+            GUID
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MAppInfo.appName">
+            <summary>
+            App name
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MAppInfo.secretKey">
+            <summary>
+            Your secret key
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MAppInfoPwd.pwd">
+            <summary>
+            The password owned by administrator，sha256 encryption before submission
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MPowPoolDailyRewardWithValid.rewardLst">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MPowPoolDailyRewardWithHash.hash">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MPowPoolDailyRewardWithHash.rewardLst">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:EDPoS_API_Core.Models.MValid">
+            <summary>
+            Valid Info
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MValid.requestSign">
+            <summary>
+            Result of Client Signature,appID + ":" + timeSpan + ":" + signPlain
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MValid.appID">
+            <summary>
+            appID
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MValid.signPlain">
+            <summary>
+            The data that awaiting signature
+            </summary>
+        </member>
+        <member name="P:EDPoS_API_Core.Models.MValid.timeSpan">
+            <summary>
+            TimeSpan
+            </summary>
         </member>
         <member name="T:EDPoS_API_Core.Models.Pool">
             <summary>
