@@ -55,47 +55,26 @@ namespace EDPoS_API_Core.Controllers
         /// <summary>
         /// Get info by addrFrom, addrTo or settlement date
         /// </summary>
-        /// <param name="appID">appID</param>
         /// <param name="addrFrom">wallet address : from</param>
         /// <param name="addrTo">wallet address : to</param>
         /// <param name="date">2020-06-04</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<string> Get(string appID, string addrFrom = "", string addrTo = "", string date = "")
+        public async Task<string> Get(string addrFrom = "", string addrTo = "", string date = "")
         {
             BPowPoolDailyReward bll = new BPowPoolDailyReward(connStr);
-            Result<MPowPoolDailyRewardWithHash> res = new Result<MPowPoolDailyRewardWithHash>();
-            BAppInfo bllInfo = new BAppInfo(connStr);
+            Result<List<MPowPoolDailyReward>> res = new Result<List<MPowPoolDailyReward>>();
 
             try
             {
                 var lst = await bll.GetBySomething(addrFrom, addrTo, date);
-                MPowPoolDailyRewardWithHash mo = new MPowPoolDailyRewardWithHash();
-                mo.rewardLst = lst;
-                var moTmp = lst[0];
-                var hashObj = moTmp.id + ":" + moTmp.addrFrom + ":" + moTmp.addrTo + ":" + moTmp.reward + DateTime.Parse(moTmp.settlementDate).ToString("yyyyMMdd");
 
-                mo.hashObj = hashObj;
-                var moInfo = await bllInfo.GetAppInfo(appID);
-                if (moInfo == null)
-                {
-                    string str = "The appID can't be null.";
-                    if (!string.IsNullOrEmpty(str))
-                    {
-                        str = "There's no such app that appID is " + appID + ".";
-                    }
-                    res = new Result<MPowPoolDailyRewardWithHash>(ResultCode.Fail, str, null);
-                    return JsonConvert.SerializeObject(res);
-                }
-                string secretKey = moInfo.secretKey.Trim();
-
-                mo.hash = Encrypt.HmacSHA256(secretKey, hashObj); //使用私钥对lst签名
-                res = new Result<MPowPoolDailyRewardWithHash>(ResultCode.Ok, null, mo);
+                res = new Result<List<MPowPoolDailyReward>>(ResultCode.Ok, null, lst);
                 return JsonConvert.SerializeObject(res);
             }
             catch (Exception ex)
             {
-                res = new Result<MPowPoolDailyRewardWithHash>(ResultCode.Fail, ex.Message, null);
+                res = new Result<List<MPowPoolDailyReward>>(ResultCode.Fail, ex.Message, null);
                 return JsonConvert.SerializeObject(res);
             }
         }
