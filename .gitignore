@@ -5,3 +5,5 @@ Web.config
 App.config
 appsettings.json
 packages/
+Test/bin
+Test/obj

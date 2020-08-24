@@ -103,12 +103,46 @@
             <param name="date"></param>
             <returns></returns>
         </member>
+        <member name="M:EDPoS_API_Core.Bll.BUnlockBlock.GetLst(System.String,System.String,System.String,System.String)">
+            <summary>
+            Get unlocked blocks by parameters
+            </summary>
+            <param name="timeSpanMin">The start timeSpan</param>
+            <param name="timeSpanMax">The end timeSpan</param>
+            <param name="addrFrom"></param>
+            <param name="addrTo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Bll.BUnlockBlock.GetLst(System.String,System.String,System.String,System.Int64,System.Int32)">
+            <summary>
+            Get unlockBlocks By parameters,there are more params
+            </summary>
+            <param name="addrFrom"></param>
+            <param name="addrTo"></param>
+            <param name="date">If it has this param, then the param timeSpan is invalid</param>
+            <param name="timeSpan"></param>
+            <param name="height"></param>
+            <returns></returns>
+        </member>
         <member name="M:EDPoS_API_Core.Bll.BVoter.GetVoting(System.String,System.String)">
             <summary>
             Get the Voting of voters by dposaddr,if has the voterAddr parameter,return the voter's information
             </summary>
             <param name="dposAddr">super node address</param>
             <param name="voterAddr">voter address</param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Common.CommonHelper.GetTimeStamp">
+            <summary>
+            Get the TimeSpan
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Common.CommonHelper.GetTimeStamp(System.DateTime)">
+            <summary>
+            Get the TimeSpan by DateTime,the datetime should be convert to UniversalTime first
+            </summary>
+            <param name="dt"></param>
             <returns></returns>
         </member>
         <member name="T:EDPoS_API_Core.Common.DataValid">
@@ -126,6 +160,30 @@
             <param name="timeSpan">TimeSpan</param>
             <param name="secretKey">Key</param>
             <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Common.Debuger.Trace(System.String)">
+            <summary>
+            输出调试信息
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Common.Debuger.Error(System.String)">
+            <summary>
+            输出错误信息
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Common.Debuger.AddLog(System.String)">
+            <summary>
+            日志记录
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Common.Debuger.TraceAlone(System.String,System.String)">
+            <summary>
+            独立日志记录跟踪信息
+            </summary>
+            <param name="message"></param>
         </member>
         <member name="M:EDPoS_API_Core.Common.Encrypt.EncryptByMD5(System.String)">
             <summary>
@@ -243,21 +301,21 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:EDPoS_API_Core.Controllers.PowPoolDailyRewardController.Get(System.String,System.String,System.String,System.String)">
+        <member name="M:EDPoS_API_Core.Controllers.PowPoolDailyRewardController.Get(System.String,System.String,System.String,System.Boolean)">
             <summary>
             Get info by addrFrom, addrTo or settlement date
             </summary>
-            <param name="appID">appID</param>
             <param name="addrFrom">wallet address : from</param>
             <param name="addrTo">wallet address : to</param>
             <param name="date">2020-06-04</param>
+            <param name="isNewWay">If you get data from unlockedBlock, set it as true</param>
             <returns></returns>
         </member>
         <member name="M:EDPoS_API_Core.Controllers.PowPoolDailyRewardController.Post(EDPoS_API_Core.Models.MPowPoolDailyRewardWithValid)">
             <summary>
             Insert Reward Info into PowPoolDailyReward
             </summary>
-            <param name="value"></param>
+            <param name="obj"></param>
             <returns>Return the count of inserted info</returns>
         </member>
         <member name="T:EDPoS_API_Core.Controllers.RewardController">
@@ -271,14 +329,47 @@
             </summary>
             <param name="option"></param>
         </member>
-        <member name="M:EDPoS_API_Core.Controllers.RewardController.Get(System.String,System.String,System.DateTime)">
+        <member name="M:EDPoS_API_Core.Controllers.RewardController.Get(System.String,System.DateTime)">
             <summary>
              Get earnings list by dpos address and date
             </summary>
-            <param name="appID">appID</param>
             <param name="dpos_addr">super node address</param>
             <param name="date">formate:2020-01-01</param>
             <returns>list</returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.UnlockBblockController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
+            <summary>
+            constructed function
+            </summary>
+            <param name="option"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.UnlockBblockController.Get(System.String,System.String,System.String,System.String)">
+            <summary>
+            Get unlocked blocks by parameters
+            </summary>
+            <param name="timeSpanMin"></param>
+            <param name="timeSpanMax"></param>
+            <param name="addrFrom"></param>
+            <param name="addrTo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.UnlockBblockController.Get(System.String,System.String,System.String,System.Int64,System.Int32)">
+            <summary>
+            Get unlockBlocks By parameters,there are more params
+            </summary>
+            <param name="addrFrom"></param>
+            <param name="addrTo"></param>
+            <param name="date">If it has this param, then the param timeSpan is invalid</param>
+            <param name="timeSpan"></param>
+            <param name="height"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.UnlockBblockController.Post(EDPoS_API_Core.Models.MUnlockBlockLstWithSign)">
+            <summary>
+            Submit UnlockBlock info
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
         </member>
         <member name="T:EDPoS_API_Core.Controllers.ValidController">
             <summary>

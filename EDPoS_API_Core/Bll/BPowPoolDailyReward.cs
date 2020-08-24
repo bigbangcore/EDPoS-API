@@ -97,11 +97,11 @@ namespace EDPoS_API_Core.Bll
             using (var conn = new MySqlConnection(connStr))
             {
                 //If it has one,skip
-                var g = await GetBySomething(mo.addrFrom, mo.addrTo, mo.settlementDate);
+                /*var g = await GetBySomething(mo.addrFrom, mo.addrTo, mo.settlementDate);
                 if(g.Count > 0)
                 {
                     return false;
-                }
+                }*/
                 var re = await conn.ExecuteAsync(sb.ToString(), new { 
                     id = 0, 
                     addrFrom = mo.addrFrom.Trim(), 

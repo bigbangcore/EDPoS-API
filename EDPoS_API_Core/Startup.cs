@@ -25,7 +25,6 @@ namespace EDPoS_API_Core
         }
 
         public IConfiguration Configuration { get; }
-
         
         public void ConfigureServices(IServiceCollection services)
         {
@@ -42,7 +41,7 @@ namespace EDPoS_API_Core
                     Version = "v1",
                     Title = "BBC EDPoS API V1"
                 });
-
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                 c.CustomSchemaIds(type => type.FullName);
                 c.IncludeXmlComments(Path.Combine(Directory.GetCurrentDirectory(), "EDPoS_API_Core.xml"));
             });

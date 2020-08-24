@@ -50,8 +50,7 @@ namespace EDPoS_API_Core.Controllers
             catch (Exception)
             {
                 return false;
-            }
-            
+            }            
         }
     }
 }

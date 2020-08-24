@@ -72,7 +72,7 @@ namespace EDPoS_API_Core.Controllers
                 else
                 {
                     Guid appID_tmp;
-                    if (!Guid.TryParse(mo.appID,out appID_tmp))
+                    if (!Guid.TryParse(mo.appID, out appID_tmp))
                     {
                         res = new Result<string>(ResultCode.Fail, "appID must be a GUID.", "");
                     }
