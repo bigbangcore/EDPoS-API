@@ -23,9 +23,11 @@ namespace EDPoS_API_Core.Common
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public static string GetTimeStamp(DateTime dt)
+        public static string GetTimeStamp(DateTime dt,int zone = 0)
         {
-            TimeSpan ts = dt.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            //var zone = (-int.Parse(DateTime.Now.ToString("%z")));
+            //由于服务器上的时区为世界协调时间，为了适应东八区的查询条件，我们这里得给它减去8
+            TimeSpan ts = dt.AddHours(-(8 - zone)).ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return Convert.ToInt64(ts.TotalMilliseconds).ToString();
         }
     }

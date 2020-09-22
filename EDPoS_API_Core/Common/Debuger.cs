@@ -35,7 +35,7 @@ namespace EDPoS_API_Core.Common
         /// <summary>
         /// 日志记录
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="message"></param>
         public static void AddLog(string message)
         {
             if (!Directory.Exists(strLogFolder))

@@ -20,6 +20,7 @@ namespace EDPoS_API_Core.Controllers
     {
         private SiteConfig Config;
         static string connStr = string.Empty;
+        static int zone = 0;
 
         /// <summary>
         /// constructed function
@@ -29,6 +30,7 @@ namespace EDPoS_API_Core.Controllers
         {
             Config = option.Value;
             connStr = SqlConn.GetConn(Config);
+            zone = int.Parse(AppConfigurtaionServices.Configuration.GetSection("Zone").Value);
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace EDPoS_API_Core.Controllers
 
             try
             {
-                var lst = await bll.GetLst(addrFrom, addrTo, date, timeSpan, height);
+                var lst = await bll.GetLst(addrFrom, addrTo, date, timeSpan, height, zone);
                 res = new Result<List<MUnlockBlock>>(ResultCode.Ok, null, lst);
                 return JsonConvert.SerializeObject(res);
             }
@@ -94,12 +96,12 @@ namespace EDPoS_API_Core.Controllers
         [HttpPost]
         public async Task<string> Post([FromBody] MUnlockBlockLstWithSign obj)
         {
-            BAppInfo bll_info = new BAppInfo(connStr);
-            BUnlockBlock bllp = new BUnlockBlock(connStr);
             Result<int> res = new Result<int>();
-
             try
             {
+                BAppInfo bll_info = new BAppInfo(connStr);
+                BUnlockBlock bllp = new BUnlockBlock(connStr);
+                
                 var mo = await bll_info.GetAppInfo(obj.appID);
                 if (mo == null)
                 {
@@ -116,7 +118,7 @@ namespace EDPoS_API_Core.Controllers
                     foreach (var v in lst)
                     {
                         //Thread.Sleep(10);
-                        tasks.Add(Task.Factory.StartNew(() => bllp.InsertOne(v)));
+                        tasks.Add(Task.Factory.StartNew(() => bllp.InsertOne(v, zone)));
                     }
                     try
                     {

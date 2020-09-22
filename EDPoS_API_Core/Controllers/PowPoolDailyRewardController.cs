@@ -21,6 +21,7 @@ namespace EDPoS_API_Core.Controllers
     {
         private SiteConfig Config;
         static string connStr = string.Empty;
+        static int zone = 0;
 
         /// <summary>
         /// constructed function
@@ -30,6 +31,7 @@ namespace EDPoS_API_Core.Controllers
         {
             Config = option.Value;
             connStr = SqlConn.GetConn(Config);
+            zone = int.Parse(AppConfigurtaionServices.Configuration.GetSection("Zone").Value);
         }
 
         /// <summary>
@@ -64,7 +66,7 @@ namespace EDPoS_API_Core.Controllers
         /// <param name="isNewWay">If you get data from unlockedBlock, set it as true</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<string> Get(string addrFrom = "", string addrTo = "", string date = "", bool isNewWay = false)
+        public async Task<string> Get(string addrFrom = "", string addrTo = "", string date = "", bool isNewWay = true)
         {
             Result<List<MPowPoolDailyReward>> res = new Result<List<MPowPoolDailyReward>>();
             var lst = new List<MPowPoolDailyReward>();
@@ -79,8 +81,8 @@ namespace EDPoS_API_Core.Controllers
                         if (DateTime.TryParse(date, out dt))
                         {
                             var dateEnd = dt.AddDays(1);
-                            var dStart = Convert.ToInt64(CommonHelper.GetTimeStamp(dt)) / 1000;
-                            var dEnd = Convert.ToInt64(CommonHelper.GetTimeStamp(dateEnd)) / 1000;
+                            var dStart = Convert.ToInt64(CommonHelper.GetTimeStamp(dt, zone)) / 1000;
+                            var dEnd = Convert.ToInt64(CommonHelper.GetTimeStamp(dateEnd, zone)) / 1000;
                             lst = await b.GetLstSum(dStart.ToString(), dEnd.ToString(), addrFrom, addrTo);
                         }
                     }

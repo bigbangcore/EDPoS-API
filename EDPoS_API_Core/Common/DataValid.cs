@@ -29,26 +29,15 @@ namespace EDPoS_API_Core.Common
             long requestTime = 0;
             if (long.TryParse(timeSpan, out requestTime))
             {
-                var dnow = DateTime.Now.ToUniversalTime().Ticks;
-                var dstart = 621355968000000000;
-                var dinterval = 5 * 60;
-                var max = (dnow - dstart) / 10000000;
-                var min = (dnow - dstart) / 10000000 - dinterval;
-
-                if (!(max >= requestTime && min <= requestTime))
-                {
-                    return false;
-                }
+                //hashmac
+                signPlain = appID + ":" + timeSpan + ":" + signPlain;
+                var sign = Encrypt.HmacSHA256(secretKey, signPlain);
+                return requestSign.Equals(sign, StringComparison.CurrentCultureIgnoreCase);
             }
             else
             {
                 return false;
-            }
-
-            //hashmac
-            signPlain = appID + ":" + timeSpan + ":" + signPlain;
-            var sign = Encrypt.HmacSHA256(secretKey, signPlain);
-            return requestSign.Equals(sign, StringComparison.CurrentCultureIgnoreCase);
+            } 
         }
     }
 }

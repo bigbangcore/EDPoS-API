@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -95,6 +96,7 @@ namespace EDPoS_API_Core.Bll
                         tmpLst.Add(tmpMo);
                     }
                 }
+
                 return tmpLst;
             }
         }
@@ -109,8 +111,9 @@ namespace EDPoS_API_Core.Bll
         /// <param name="date">If it has this param, then the param timeSpan is invalid</param>
         /// <param name="timeSpan"></param>
         /// <param name="height"></param>
+        /// <param name="zone"></param>
         /// <returns></returns>
-        public async Task<List<MUnlockBlock>> GetLst(string addrFrom = "", string addrTo = "", string date = "", long timeSpan = 0, int height = 0)
+        public async Task<List<MUnlockBlock>> GetLst(string addrFrom = "", string addrTo = "", string date = "", long timeSpan = 0, int height = 0,int zone = 0)
         {
             if (SqlAttack.IsDangerous(ref addrFrom) || SqlAttack.IsDangerous(ref addrTo))
             {
@@ -130,8 +133,8 @@ namespace EDPoS_API_Core.Bll
                 if (DateTime.TryParse(date, out dt))
                 {
                     var dateEnd = dt.AddDays(1);
-                    var dStart = Convert.ToInt64(CommonHelper.GetTimeStamp(dt)) / 1000;
-                    var dEnd = Convert.ToInt64(CommonHelper.GetTimeStamp(dateEnd)) / 1000;
+                    var dStart = Convert.ToInt64(CommonHelper.GetTimeStamp(dt, zone)) / 1000;
+                    var dEnd = Convert.ToInt64(CommonHelper.GetTimeStamp(dateEnd, zone)) / 1000;
                     sb.Append("AND timeSpan >= " + dStart + " AND  timeSpan <= " + dEnd + " ");
                 }
                 else
@@ -195,7 +198,7 @@ namespace EDPoS_API_Core.Bll
             return tmpLst;
         }
 
-        public async Task<bool> InsertOne(MUnlockBlock mo)
+        public async Task<bool> InsertOne(MUnlockBlock mo,int zone)
         {
             StringBuilder sb = new StringBuilder();
             string addrFrom = mo.addrFrom;
@@ -213,7 +216,7 @@ namespace EDPoS_API_Core.Bll
                 {
                     d = mo.date.ToString("yyyy-MM-dd");
                 }
-                var g = await GetLst(mo.addrFrom, mo.addrTo, d, mo.timeSpan, mo.height);
+                var g = await GetLst(mo.addrFrom, mo.addrTo, d, mo.timeSpan, mo.height, zone);
                 if (g.Count > 0)
                 {
                     //update

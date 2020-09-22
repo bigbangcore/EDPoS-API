@@ -113,7 +113,7 @@
             <param name="addrTo"></param>
             <returns></returns>
         </member>
-        <member name="M:EDPoS_API_Core.Bll.BUnlockBlock.GetLst(System.String,System.String,System.String,System.Int64,System.Int32)">
+        <member name="M:EDPoS_API_Core.Bll.BUnlockBlock.GetLst(System.String,System.String,System.String,System.Int64,System.Int32,System.Int32)">
             <summary>
             Get unlockBlocks By parameters,there are more params
             </summary>
@@ -122,6 +122,7 @@
             <param name="date">If it has this param, then the param timeSpan is invalid</param>
             <param name="timeSpan"></param>
             <param name="height"></param>
+            <param name="zone"></param>
             <returns></returns>
         </member>
         <member name="M:EDPoS_API_Core.Bll.BVoter.GetVoting(System.String,System.String)">
@@ -138,7 +139,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:EDPoS_API_Core.Common.CommonHelper.GetTimeStamp(System.DateTime)">
+        <member name="M:EDPoS_API_Core.Common.CommonHelper.GetTimeStamp(System.DateTime,System.Int32)">
             <summary>
             Get the TimeSpan by DateTime,the datetime should be convert to UniversalTime first
             </summary>
@@ -177,7 +178,7 @@
             <summary>
             日志记录
             </summary>
-            <param name="obj"></param>
+            <param name="message"></param>
         </member>
         <member name="M:EDPoS_API_Core.Common.Debuger.TraceAlone(System.String,System.String)">
             <summary>
@@ -224,6 +225,26 @@
             Add a app info
             </summary>
             <param name="mo">MAppInfoPwd</param>
+            <returns></returns>
+        </member>
+        <member name="T:EDPoS_API_Core.Controllers.BlockRewardController">
+            <summary>
+            About Block Reward
+            </summary>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.BlockRewardController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">
+            <summary>
+            
+            </summary>
+            <param name="option"></param>
+        </member>
+        <member name="M:EDPoS_API_Core.Controllers.BlockRewardController.Get(System.String,System.String,System.String)">
+            <summary>
+            GET: api/BlockReward
+            </summary>
+            <param name="template_addr">template addr</param>
+            <param name="date">eg. 2020-09-09</param>
+            <param name="ConsensusType">Consensus Type：primary-pow / primary-dpos, Default:primary-pow</param>
             <returns></returns>
         </member>
         <member name="M:EDPoS_API_Core.Controllers.DailyRewardTotalController.#ctor(Microsoft.Extensions.Options.IOptions{EDPoS_API_Core.Models.SiteConfig})">

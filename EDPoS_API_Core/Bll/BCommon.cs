@@ -18,6 +18,40 @@ namespace EDPoS_API_Core.Bll
             connStr = str;
         }
 
+        public async Task<List<MBlockPa>> GetBlockDailyReward(string reward_address, string date, string ConsensusType = "")
+        {
+            if (SqlAttack.IsDangerous(ref reward_address) || SqlAttack.IsDangerous(ref date))
+            {
+                return new List<MBlockPa>();
+            }
+            using (var conn = new MySqlConnection(connStr))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("SELECT sum(reward_money) reward_money,reward_address from Block ");
+                if (!string.IsNullOrEmpty(ConsensusType))
+                {
+                    sb.Append(" WHERE type = '" + ConsensusType + "'");
+                }
+                sb.Append(" AND is_useful = 1");
+
+                if (!string.IsNullOrEmpty(reward_address))
+                {
+                    sb.Append(" AND reward_address = '" + reward_address + "'");
+                }
+
+                if (!string.IsNullOrEmpty(date))
+                {
+                    date = DateTime.Parse(date).ToString("yyyy-MM-dd");
+                    sb.Append(" AND from_unixtime(time, '%Y-%m-%d') = '" + date + "'");
+                }
+
+                sb.Append(" GROUP BY reward_address");
+
+                var query = conn.QueryAsync<MBlockPa>(sb.ToString());
+                return (await query).ToList();
+            }
+        }
+
         /// <summary>
         /// Get EDPoS Blocks Detail what is useful
         /// </summary>
