@@ -86,7 +86,31 @@ namespace EDPoS_API_Core.Controllers
                             lst = await b.GetLstSum(dStart.ToString(), dEnd.ToString(), addrFrom, addrTo);
                         }
                     }
-                    res = new Result<List<MPowPoolDailyReward>>(ResultCode.Ok, null, lst);
+                    
+                    //TODO:需要处理date为空的情况
+
+                    var tmp = new List<MPowPoolDailyReward>();
+                    if (lst.Count > 0)
+                    {
+                        var reLst = lst.GroupBy(p => new { p.addrTo, p.addrFrom })
+                            .Select(g => new
+                            {
+                                addrFrom = g.Key.addrFrom,
+                                addrTo = g.Key.addrTo,
+                                reward = g.Sum(p => p.reward)
+                            }).ToList();
+                        foreach (var item in reLst)
+                        {
+                            var mo = new MPowPoolDailyReward();
+                            mo.addrFrom = item.addrFrom;
+                            mo.addrTo = item.addrTo;
+                            mo.id = 0;
+                            mo.reward = item.reward;
+                            mo.settlementDate = Convert.ToDateTime(date).ToString("MM/dd/yyy HH:mm:ss");
+                            tmp.Add(mo);
+                        }
+                    }
+                    res = new Result<List<MPowPoolDailyReward>>(ResultCode.Ok, null, tmp);
                     return JsonConvert.SerializeObject(res);
                 }
                 else
