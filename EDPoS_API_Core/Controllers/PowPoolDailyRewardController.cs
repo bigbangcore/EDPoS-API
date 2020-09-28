@@ -72,6 +72,20 @@ namespace EDPoS_API_Core.Controllers
             var lst = new List<MPowPoolDailyReward>();
             try
             {
+                //用于强制改变API调用对象，如果是1就使用矿池解锁的每个块的结果
+                //如果是2就使用矿池每日统计后的提交结果
+                //如果是其它的值，比如0，就由提交的参数决定
+
+                var vv = AppConfigurtaionServices.Configuration.GetSection("isNewWay").Value;
+                if (vv.Equals("1"))
+                {
+                    isNewWay = true;
+                }
+                else if(vv.Equals("2"))
+                {
+                    isNewWay = false;
+                }
+
                 if (isNewWay)
                 {
                     BUnlockBlock b = new BUnlockBlock(connStr);                    

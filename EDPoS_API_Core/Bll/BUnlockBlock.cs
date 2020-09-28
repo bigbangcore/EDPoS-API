@@ -102,6 +102,31 @@ namespace EDPoS_API_Core.Bll
         }
         #endregion
 
+        #region Judge if the data is exist
+        public async Task<List<MUnlockBlock>> IsExist(int height, string addrFrom="", string addrTo="")
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("SELECT `id`,`addrFrom`,`addrTo`,`balance`,`timeSpan`,`date`,`height` FROM UnlockedBlock WHERE 1=1 ");
+            if (height != 0)
+            {
+                sb.Append("AND height = " + height + " ");
+            }
+            if (!string.IsNullOrEmpty(addrFrom))
+            {
+                sb.Append("AND addrFrom = '" + addrFrom + "' ");
+            }
+            if (!string.IsNullOrEmpty(addrTo))
+            {
+                sb.Append("AND addrTo = '" + addrTo + "' ");
+            }
+            using (var conn = new MySqlConnection(connStr))
+            {
+                var re = await conn.QueryAsync<MUnlockBlock>(sb.ToString());
+                return re.ToList();
+            }
+        }
+        #endregion
+
         #region Get unlockBlocks By parameters,there are more params
         /// <summary>
         /// Get unlockBlocks By parameters,there are more params
@@ -216,7 +241,8 @@ namespace EDPoS_API_Core.Bll
                 {
                     d = mo.date.ToString("yyyy-MM-dd");
                 }
-                var g = await GetLst(mo.addrFrom, mo.addrTo, d, mo.timeSpan, mo.height, zone);
+
+                var g = await IsExist(mo.height, mo.addrFrom, mo.addrTo);
                 if (g.Count > 0)
                 {
                     //update
@@ -228,6 +254,10 @@ namespace EDPoS_API_Core.Bll
                 }
                 else
                 {
+                    //INSERT INTO `UnlockedBlock` (`addrFrom`,`addrTo`,`balance`,`timeSpan`,`date`,`height`) VALUES (
+                    //@addrFrom, @addrTo, @balance, @timeSpan, @date, @height)
+                    //WHERE NOT EXISTS (SELECT 1 FROM `UnlockedBlock` WHERE addrTo=@addrTo AND height=@height);
+
                     //insert
                     sb.Append("INSERT INTO `UnlockedBlock` (`addrFrom`,`addrTo`,`balance`,`timeSpan`,`date`,`height`) VALUES (");
                     sb.Append("@addrFrom, @addrTo, @balance, @timeSpan, @date, @height");
