@@ -88,7 +88,8 @@ namespace EDPoS_API_Core.Controllers
 
                 if (isNewWay)
                 {
-                    BUnlockBlock b = new BUnlockBlock(connStr);                    
+                    BUnlockBlock b = new BUnlockBlock(connStr);
+                    BCommon bll = new BCommon(connStr);
                     if (!string.IsNullOrEmpty(date))
                     {
                         DateTime dt = new DateTime();
@@ -124,6 +125,25 @@ namespace EDPoS_API_Core.Controllers
                             tmp.Add(mo);
                         }
                     }
+
+                    var query = bll.GetBlockDailyReward(addrFrom, date, "primary-pow");
+                    var lsts = (await query).ToList();
+                    var ress = new Result<List<MBlockPa>>(ResultCode.Ok, null, lsts);
+
+                    decimal block_reward = ress.Data[0].reward_money;
+                    decimal count = tmp.Sum(p => p.reward);
+                    double bl = Convert.ToDouble(count / block_reward);
+
+                    if (bl < 0.975)
+                    {
+                        double cz = Convert.ToDouble(block_reward - count) * 0.97;
+                        double bc = cz / tmp.Count;
+                        foreach (var i in tmp)
+                        {
+                            i.reward = i.reward + Convert.ToDecimal(bc);
+                        }
+                    }
+
                     res = new Result<List<MPowPoolDailyReward>>(ResultCode.Ok, null, tmp);
                     return JsonConvert.SerializeObject(res);
                 }
@@ -226,6 +246,135 @@ namespace EDPoS_API_Core.Controllers
                 res = new Result<int>(ResultCode.Fail, ex.Message, 0);
                 return JsonConvert.SerializeObject(res);
             }            
+        }
+
+
+        [HttpGet]
+        [Route("Statistics")]
+        public async Task<string> Statistics(string addrFrom = "", string addrTo = "", string date = "", bool isNewWay = true)
+        {
+            Result<List<MPowPoolDailyReward>> res = new Result<List<MPowPoolDailyReward>>();
+            var lst = new List<MPowPoolDailyReward>();
+            try
+            {
+                //用于强制改变API调用对象，如果是1就使用矿池解锁的每个块的结果
+                //如果是2就使用矿池每日统计后的提交结果
+                //如果是其它的值，比如0，就由提交的参数决定
+
+                var vv = AppConfigurtaionServices.Configuration.GetSection("isNewWay").Value;
+                if (vv.Equals("1"))
+                {
+                    isNewWay = true;
+                }
+                else if (vv.Equals("2"))
+                {
+                    isNewWay = false;
+                }
+
+                if (isNewWay)
+                {
+                    BUnlockBlock b = new BUnlockBlock(connStr);
+                    BCommon bll = new BCommon(connStr);
+                    DateTime dateEnd;
+                    long dStart = 0;
+                    long dEnd = 0;
+                    if (!string.IsNullOrEmpty(date))
+                    {
+                        DateTime dt = new DateTime();
+                        if (DateTime.TryParse(date, out dt))
+                        {
+                             dateEnd = dt.AddDays(1);
+                             dStart = Convert.ToInt64(CommonHelper.GetTimeStamp(dt, zone)) / 1000;
+                             dEnd = Convert.ToInt64(CommonHelper.GetTimeStamp(dateEnd, zone)) / 1000;
+                             lst = await b.GetLstSum(dStart.ToString(), dEnd.ToString(), addrFrom, addrTo);
+                        }
+                    }
+
+                    //TODO:需要处理date为空的情况
+
+                    var tmp = new List<MPowPoolDailyReward>();
+                    if (lst.Count > 0)
+                    {
+                        var reLst = lst.GroupBy(p => new { p.addrTo, p.addrFrom })
+                            .Select(g => new
+                            {
+                                addrFrom = g.Key.addrFrom,
+                                addrTo = g.Key.addrTo,
+                                reward = g.Sum(p => p.reward)
+                            }).ToList();
+                        foreach (var item in reLst)
+                        {
+                            var mo = new MPowPoolDailyReward();
+                            mo.addrFrom = item.addrFrom;
+                            mo.addrTo = item.addrTo;
+                            mo.id = 0;
+                            mo.reward = item.reward;
+                            mo.settlementDate = Convert.ToDateTime(date).ToString("MM/dd/yyy HH:mm:ss");
+                            tmp.Add(mo);
+                        }
+                    }
+                    var query = bll.GetBlockDailyReward(addrFrom, date, "primary-pow");
+                    var lsts = (await query).ToList();
+                    var ress = new Result<List<MBlockPa>>(ResultCode.Ok, null, lsts);
+
+                    decimal block_reward = ress.Data[0].reward_money;
+                    decimal ys = tmp.Sum(p => p.reward);
+                    decimal count = tmp.Sum(p => p.reward);
+                    double bl = Convert.ToDouble(count / block_reward);
+                    double cz = 0;
+                    double bc = 0;
+                    if (bl < 0.975)
+                    {
+                        cz = Convert.ToDouble(block_reward - count) * 0.97;
+                        bc = cz / tmp.Count;
+                        foreach (var i in tmp)
+                        {
+                            i.reward = i.reward + Convert.ToDecimal(bc);
+                        }
+                    }
+                    count = tmp.Sum(p => p.reward);
+                    return " 统计："+ count.ToString()+",原始:"+ ys.ToString()+ ",差额:" + cz.ToString() + ",bc:" + bc.ToString() + ",数量:" + tmp.Count.ToString() + ",地址:" + addrFrom + "开始时间:" + DateTimeOffset.FromUnixTimeSeconds(dStart).ToLocalTime().ToString() + ",结束时间:" + DateTimeOffset.FromUnixTimeSeconds(dEnd).ToLocalTime().ToString();
+                }
+                else
+                {
+                    BPowPoolDailyReward bll = new BPowPoolDailyReward(connStr);
+                    lst = await bll.GetBySomething(addrFrom, addrTo, date);
+                    // 这里对相同地址的数据求和
+
+                    var reLst = lst.GroupBy(p => new { p.addrFrom, p.addrTo, p.settlementDate })
+                        .Select(g => new
+                        {
+                            id = 0,
+                            addrFrom = g.Key.addrFrom,
+                            addrTo = g.Key.addrTo,
+                            settlementDate = g.Key.settlementDate,
+                            reward = g.Sum(p => p.reward)
+                        }).ToList();
+
+                    var lst_tmp = new List<MPowPoolDailyReward>();
+                    foreach (var item in reLst)
+                    {
+                        var mo = new MPowPoolDailyReward();
+                        mo.addrFrom = item.addrFrom;
+                        mo.addrTo = item.addrTo;
+                        mo.id = 0;
+                        mo.reward = item.reward;
+                        mo.settlementDate = item.settlementDate;
+                        lst_tmp.Add(mo);
+                    }
+
+                    decimal count = 0;
+                    foreach (var i in lst_tmp)
+                    {
+                        count += i.reward;
+                    }
+                    return " 统计：" + count.ToString() + ",地址:" + addrFrom + "开始时间:" + date;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "error";
+            }
         }
     }
 }

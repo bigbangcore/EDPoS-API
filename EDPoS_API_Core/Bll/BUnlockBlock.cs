@@ -56,6 +56,8 @@ namespace EDPoS_API_Core.Bll
                 sb.Append(" AND addrTo = '" + addrTo + "'");
             }
 
+            Console.WriteLine(sb.ToString());
+
             using (var conn = new MySqlConnection(connStr))
             {
                 var lst = await conn.QueryAsync<MUnlockBlock>(sb.ToString());

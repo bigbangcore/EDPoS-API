@@ -47,6 +47,9 @@ namespace EDPoS_API_Core.Bll
 
                 sb.Append(" GROUP BY reward_address");
 
+
+                Console.WriteLine(sb.ToString());
+
                 var query = conn.QueryAsync<MBlockPa>(sb.ToString());
                 return (await query).ToList();
             }

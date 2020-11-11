@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using EDPoS_API_Core.Common;
 using EDPoS_API_Core.Models;
+using Microsoft.CodeAnalysis.CSharp;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -152,6 +153,29 @@ namespace EDPoS_API_Core.Bll
 
                 var query = conn.QueryAsync<DposAddrDaily>(sb.ToString());
                 return (await query).ToList();
+            }
+        }
+
+
+        public async Task<List<int>> GetResidue(string date)
+        {
+            using (var conn = new MySqlConnection(connStr))
+            {
+                string sql = "select count(id) as count from DposRewardDetails where reward_date = '"+date+"' and reward_state = 0";
+                var query = conn.QueryAsync<int>(sql);
+                return (await query).ToList();
+
+            }
+        }
+
+        public async Task<List<int>> Delete(string date)
+        {
+            using (var conn = new MySqlConnection(connStr))
+            {
+                string sql = "select count(id) as count from DposRewardDetails where reward_date = '" + date + "' and reward_state = 0";
+                var query = conn.QueryAsync<int>(sql);
+                return (await query).ToList();
+
             }
         }
     }

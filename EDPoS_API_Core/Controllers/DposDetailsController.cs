@@ -51,5 +51,25 @@ namespace EDPoS_API_Core.Controllers
                 return JsonConvert.SerializeObject(res);
             }
         }
+
+
+        [HttpGet]
+        [Route("Rreidue")]
+        public async Task<string> Rreidue(string dateTime = "")
+        {
+            Result<List<DposRewardDetails>> res = new Result<List<DposRewardDetails>>();
+            Bll.BDpos bll = new Bll.BDpos(connStr);
+            try
+            {
+                var query = bll.GetResidue(dateTime);
+                var list = (await query).ToList();
+                return "还有" + list[0].ToString() + "条数据在计算中";
+            }
+            catch (Exception ex)
+            {
+                return "error";
+            }
+        }
+
     }
 }
